@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 const getUserDetails = async (cookieHeader: string | null) => {
 
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    const BASE_URL = process.env.DOMAIN;
 
     try {
 
