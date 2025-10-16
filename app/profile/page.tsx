@@ -30,6 +30,10 @@ export default async function ProfilePage(){
      const userId = await getUserDetails(cookieHeader);
 
     return (
-        <Link href={`/profile/${userId}`}>User profile details</Link>
+        <div className="flex justify-around items-center h-full">
+            <div className="flex flex-col w-[400px] h-auto bg-white text-black rounded-lg p-4">
+                <Link href={`/profile/${userId}`}>Click here to get User profile details</Link>
+            </div>
+        </div>
     )
 }

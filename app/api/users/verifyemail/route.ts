@@ -1,31 +1,45 @@
 import { connect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/models/userModel"
-
-connect();
+import User from "@/models/userModel";
 
 export async function POST(request: NextRequest){
+    
     try {
+        await connect();
         const reqBody = await request.json();
-        const { token } = reqBody;
-        console.log("Token: ", token);
+        const { token } = reqBody;        
 
         const user = await User.findOne({
-            verifyToken: token,
-            verifyTokenExpiry: {$gt: Date.now()}
+            verifyToken: token            
         })
 
         if(!user){
-            return NextResponse.json({error: "Invalid token"}, {status: 400});
+            return NextResponse.json(
+                {
+                    message: "Invalid token.",
+                    success: false,
+                    canResend: true,
+                }, 
+                { status: 400 }
+            );
         }
 
-        console.log("Verify user: ", user);
+        if(user.verifyTokenExpiry < Date.now()){
+            return NextResponse.json(
+                {
+                    message: "Verification link has expired.", 
+                    success: false,
+                    canResend: true
+                }, 
+                { status: 400 }
+            );
+        }
 
         user.isVerified = true;
         user.verifyToken = undefined;
         user.verifyTokenExpiry = undefined;
-        console.log("user: ", user);
-        await user.save();
+
+        const userSaved = await user.save();
 
         return NextResponse.json({
             message:"Email verified successfully",
@@ -34,6 +48,12 @@ export async function POST(request: NextRequest){
 
     } catch (error:any) {
         console.log("email Verify - api - POST", error);
-        return NextResponse.json({error: "Server error verifying email"}, {status:500})
+        return NextResponse.json(
+            {
+                message: "Server error verifying email",
+                success: false
+            }, 
+            { status:500 }
+        )
     }
 }

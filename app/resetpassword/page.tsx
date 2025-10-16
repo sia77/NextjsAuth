@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSearchParams } from 'next/navigation';
 import Ticker from "../components/tiker";
 
 export default function ResetPasswordPage(){

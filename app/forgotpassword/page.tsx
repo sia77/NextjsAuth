@@ -16,7 +16,6 @@ export default function ForgotPasswordPag(){
         
         //API call
         try {
-            console.log("in try block")
             setLoading(true);
             const response = await axios.post("/api/users/forgotpassword", {email});
             setResponseMessage(response.data.message);
@@ -32,12 +31,10 @@ export default function ForgotPasswordPag(){
 
     const formValidated = () => {
         setError("");
-
         if(!email){
             setError("The field can not be blank");
             return false;
         }
-
         return true;
     }
 

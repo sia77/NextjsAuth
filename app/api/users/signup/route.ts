@@ -11,16 +11,21 @@ export async function POST(request:NextRequest){
     try {
 
         await connect();
-        const reqBody = await request.json();
-        const {username, email, password} = reqBody;
+        const {username, email, password} = await request.json();
 
-        console.log(reqBody);
+        console.log({username, email, password});
 
         //check if the user already exists
         const user = await User.findOne({email})
 
         if(user){
-            return NextResponse.json({error: "User already exists" }, {status:400})
+            return NextResponse.json(
+                {
+                    error: "User already exists", 
+                    success:false 
+                }, 
+                { status:409 }
+            );
         }
 
         //hash password
@@ -34,22 +39,36 @@ export async function POST(request:NextRequest){
         });
 
         const saveUser = await newUser.save();
-        console.log(saveUser);
-
 
         //Send verification email
-        const emailSent = await sendEmail({email, emailType:EmailType.VERIFY,userId: saveUser._id});
+        const emailSent = await sendEmail({ email, emailType:EmailType.VERIFY, userId: saveUser._id });
 
-
-        return NextResponse.json({
-            message: "User created successfully",
-            success: true,
-            saveUser
-        }, {status:200});
+        if(emailSent && Array.isArray(emailSent.accepted) && emailSent.accepted.length > 0){
+            return NextResponse.json(
+            {
+                message: "User created successfully",
+                success: true,
+                saveUser
+            }, 
+            { status: 201 }
+        );
+        }else{
+            return NextResponse.json(
+                {
+                    message: "There was an issue resending verification email. Please try again",
+                    success: false
+                },
+                { status: 500}
+            );
+        }
         
     } catch (error:any) {
-        return NextResponse.json({error: error.message},
-            {status: 500}
+        return NextResponse.json(
+            { 
+                error: error.message,
+                success:false
+            },
+            { status: 500 }
         )
     }
 }

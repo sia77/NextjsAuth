@@ -3,7 +3,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import toast from "react-hot-toast";
 import Ticker from "../components/tiker";
 
 
@@ -15,8 +14,9 @@ export default function SignupPage(){
         username:""
     });
 
-    const [error, setError] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [responseMsg, setResponseMsg] = useState("");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -35,25 +35,29 @@ export default function SignupPage(){
         try {
             setLoading(true);
             const res = await axios.post("/api/users/signup", user);
+            setSuccess(res.data.success);
+            setResponseMsg(res.data.message);
             console.log("signup success", res.data);
-            router.push("/login");
+            router.push("/login?from=signup&msg=verify-email");
         } catch (error:any) {
             console.log("Failed: ", error.message)
-            setError(error.message)
+            setSuccess(error.response?.data?.success);
+            setResponseMsg(error.response?.data?.message);
         } finally{
             setLoading(false);
         }
-
-
     }
 
     return (
 
         <div className="flex justify-around items-center h-full">
             <div className="flex flex-col w-[400px] h-auto bg-white text-black rounded-lg p-4">
-
                 <div className="" >
                     <h1 className="font-bold text-center mb-3">Signup</h1>
+
+                    {
+                        responseMsg && (<div className={`text-2xl rounded-lg p-2 mb-2 ${success ? "bg-green-100" : "bg-red-100"}` } >{responseMsg}</div>)                    
+                    }
 
                     <div className="flex flex-col mb-3">
                         <label className="font-bold" htmlFor="username">username</label>
@@ -93,10 +97,11 @@ export default function SignupPage(){
 
                     <div className="flex flex-col">
                         <button
+                            disabled={loading || buttonDisabled}
                             onClick={onSignup} 
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer h-[50px] mb-3"    
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer h-[50px] mb-4"    
                         >{loading?  <Ticker />: "Signup"}</button>
-                        <Link href="/login">Login</Link>
+                        <Link className="underline" href="/login">Login</Link>
                     </div>
                 </div>
             </div>
