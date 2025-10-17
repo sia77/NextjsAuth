@@ -15,16 +15,31 @@ export async function POST(request:NextRequest){
 
         console.log({username, email, password});
 
-        //check if the user already exists
-        const user = await User.findOne({email})
+        // 1. CHECK FOR USERNAME OR EMAIL CONFLICT
+        const existingUser = await User.findOne({ 
+            $or: [{ email: email }, { username: username }] 
+        });
 
-        if(user){
+        if (existingUser) {
+            let errorMessage = "User already exists";
+            let conflictField = "general";
+
+            if (existingUser.email === email) {
+                errorMessage = "An account with this email already exists";
+                conflictField = "email";
+            } else if (existingUser.username === username) {
+                errorMessage = "This username is already taken";
+                conflictField = "username";
+            }
+            
+            // Return specific 409 Conflict response
             return NextResponse.json(
                 {
-                    error: "User already exists", 
-                    success:false 
-                }, 
-                { status:409 }
+                    message: errorMessage,
+                    conflictField: conflictField, // Helps client target the error
+                    success: false
+                },
+                { status: 409 }
             );
         }
 
@@ -55,7 +70,7 @@ export async function POST(request:NextRequest){
         }else{
             return NextResponse.json(
                 {
-                    message: "There was an issue resending verification email. Please try again",
+                    message: "There was an issue sending verification email. Please try again",
                     success: false
                 },
                 { status: 500}
@@ -65,7 +80,7 @@ export async function POST(request:NextRequest){
     } catch (error:any) {
         return NextResponse.json(
             { 
-                error: error.message,
+                message: error.message,
                 success:false
             },
             { status: 500 }

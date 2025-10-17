@@ -21,7 +21,6 @@ export async function POST(request: NextRequest){
             );
         }
 
-
         //Send verification email
         const emailSent = await sendEmail({email, emailType:EmailType.RESET,userId: user._id});
 

@@ -38,23 +38,21 @@ export default function ForgotPasswordPag(){
         return true;
     }
 
-    return(                
+    return(     
+        
         <div className="flex justify-around items-center h-full">
-            <div>
-                <div className="flex flex-col bg-white w-[400px] rounded mb-4">
+            <div className="flex flex-col w-[400px] h-auto bg-white text-black rounded-lg p-4">                
+                <div className="" >
+                    <h1 className="font-bold text-center mb-3">Forgot Password</h1>
                     {error && (
-                        <div className="flex items-center border-green-400 text-green-700 p-4 rounded text-sm" role="alert">
-                            <p>{error}</p>
-                        </div>
-                    )}
+                         <div className="text-2xl bg-red-100 rounded-lg p-2 mb-2">{ error }</div>
+                        )
+                    }
                     {responseMessage && (
-                        <div className="flex items-center border-green-400 text-green-700 p-4 rounded text-sm" role="alert">
-                            <p>{responseMessage}</p>
-                        </div>
-                    )}
-                </div>
+                        <div className="text-2xl bg-red-100 rounded-lg p-2 mb-2">{ responseMessage }</div>
+                        )
+                    }
 
-                <div className="flex flex-col w-[400px] h-[200px] bg-white text-black rounded-lg p-5">
                     <div className="flex flex-col mb-3">
                         <label className="font-bold" htmlFor="email">Email</label>
                         <input
@@ -69,12 +67,14 @@ export default function ForgotPasswordPag(){
                     </div>
 
                     <div className="flex flex-col mb-3">
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer h-[50px]"
-                        onClick={forgotPassword}>{loading? <Ticker />: "Submit"}</button>
+                        <button 
+                            disabled={loading}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer h-[50px]"
+                            onClick={forgotPassword}>{loading? <Ticker />: "Submit"}</button>
                     </div>
+
                 </div>
             </div>
         </div>
     )
-
 }

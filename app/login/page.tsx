@@ -16,8 +16,6 @@ export default function LoginPage(){
     const [source, setSource] = useState(searchParams.get('from') === "signup");
 
     
-    //const source = searchParams.get('from');
-
 
     const IsUserVerified = async() => {
         setSource(false);
@@ -64,10 +62,10 @@ export default function LoginPage(){
                 <div className="" >
                     <h1 className="font-bold text-center mb-3">Login</h1>
                     {
-                        responseMsg && (<div className="text-2xl bg-red-100 rounded-lg p-2 mb-2" >{responseMsg}</div>)                    
+                        responseMsg && (<div className={`bg-red-100 border px-4 py-3 rounded mb-4 text-sm ${ success ? "border-green-400 text-green-700" :"border-red-400 text-red-700" }`} role="alert" >{ responseMsg }</div>)                    
                     }
                     {
-                         source && (<div className="text-2xl bg-red-100 rounded-lg p-2 mb-2" >Please check your inbox for an email verification link.</div>)                    
+                        source && (<div className="bg-green-100 border px-4 py-3 rounded mb-4 text-sm border-green-400 text-green-700" role="alert" >Please check your inbox for an email verification link.</div>)                    
                     }
 
                     <div className="flex flex-col mb-3">
@@ -81,8 +79,6 @@ export default function LoginPage(){
                             placeholder="email"
                             onChange={(e) => setUser({...user, email:e.target.value})} />
                     </div>
-                    
-
 
                     <div className="flex flex-col mb-3">
                         <label htmlFor="password" className="font-bold">password</label>

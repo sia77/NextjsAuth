@@ -11,6 +11,7 @@ export default function ResetPasswordPage(){
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     useEffect(() => {
         
@@ -32,14 +33,20 @@ export default function ResetPasswordPage(){
         }
 
         try {
+            setLoading(true);
             console.log("token: ", token);
             const res = await axios.post("/api/users/resetpassword", {token, password})
             console.log("res: ", res.data);
+            setSuccess(res.data.success);
+
             
         } catch (error:any) {
             console.log("resetPassword: ", error);
+            setSuccess(error?.response?.data?.success);
             setError(error.message);
             throw new Error(error.message)
+        }finally{
+            setLoading(false);
         }
     }
 
@@ -67,10 +74,10 @@ export default function ResetPasswordPage(){
 
     return (
         <div className="flex justify-around items-center h-full">
-            <div className="flex flex-col w-[400px] h-[300px] bg-white text-black rounded-lg p-4  ">
+            <div className="flex flex-col w-[400px] h-auto bg-white text-black rounded-lg p-4  ">
 
                 {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm" role="alert">
+                    <div className={`bg-red-100 border px-4 py-3 rounded mb-4 text-sm ${ success ? "border-green-400 text-green-700" :"border-red-400 text-red-700" }`}>
                         <p className="font-semibold">Error:</p>
                         <p>{error}</p>
                     </div>

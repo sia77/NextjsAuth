@@ -10,17 +10,32 @@ export async function GET(request:NextRequest){
         const userId = await getDataFromToken();
 
         if (!userId) {
-             return NextResponse.json({ error: "Unauthorized or token missing/invalid" }, { status: 401 });
-        }
+             return NextResponse.json(
+                { 
+                    message: "Unauthorized or token missing/invalid", 
+                    success:false 
+                }, 
+                { status: 401 });
+        };
 
         const user = await User.findOne({_id: userId}).select("-password");
         
-        return NextResponse.json({
-            message:"User found",
-            data: user
-        })
+        return NextResponse.json(
+            {
+                message:"User found",
+                data: user,
+                success:true
+            },
+            { status: 200 }
+        );
     } catch (error:any) {
         console.log("user-route-GET: ", error);
-        return NextResponse.json({error: "Server error retrieving user data"}, {status:500})
+        return NextResponse.json(
+            {
+                message: "Server error retrieving user data",
+                success:false
+            },
+            {status:500}
+        );
     }
 }

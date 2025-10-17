@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Ticker from "../components/tiker";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
 
 export default function SignupPage(){
     const router = useRouter();
@@ -14,23 +17,36 @@ export default function SignupPage(){
         username:""
     });
 
-    const [buttonDisabled, setButtonDisabled] = useState(false);
     const [success, setSuccess] = useState(false);
     const [responseMsg, setResponseMsg] = useState("");
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        if( user.email.length > 0  && 
-            user.password.length > 0 && 
-            user.username.length > 0 ){
-                setButtonDisabled(false);
-        }else {
-            setButtonDisabled(true);
+    const validateForm = () => {
+
+        if( !user.email?.length || !user.password?.length || !user.username?.length ){
+            console.log("hello....");
+            setResponseMsg("All fields are required");
+            return false;
         }
 
-    }, [user])
+        if (user.email && !emailRegex.test(user.email)) {
+            setResponseMsg('Please enter a valid email address.');
+            return false;
+        }
+
+        if (!passwordRegex.test(user.password) ) {
+            setResponseMsg('Please use at least 8 chars; at lease one number, one letter, and one special char');
+            return false;
+        }
+
+        return true;
+
+    }
+
 
     const onSignup = async() => {
+
+        if(!validateForm()) return;
 
         try {
             setLoading(true);
@@ -38,9 +54,8 @@ export default function SignupPage(){
             setSuccess(res.data.success);
             setResponseMsg(res.data.message);
             console.log("signup success", res.data);
-            router.push("/login?from=signup&msg=verify-email");
+            router.push("/login?from=signup&sucess=verify-email");
         } catch (error:any) {
-            console.log("Failed: ", error.message)
             setSuccess(error.response?.data?.success);
             setResponseMsg(error.response?.data?.message);
         } finally{
@@ -56,7 +71,7 @@ export default function SignupPage(){
                     <h1 className="font-bold text-center mb-3">Signup</h1>
 
                     {
-                        responseMsg && (<div className={`text-2xl rounded-lg p-2 mb-2 ${success ? "bg-green-100" : "bg-red-100"}` } >{responseMsg}</div>)                    
+                        responseMsg && (<div className={`bg-red-100 border px-4 py-3 rounded mb-4 text-sm ${ success ? "border-green-400 text-green-700" :"border-red-400 text-red-700" }`} role="alert" >{ responseMsg }</div>)                    
                     }
 
                     <div className="flex flex-col mb-3">
@@ -97,7 +112,7 @@ export default function SignupPage(){
 
                     <div className="flex flex-col">
                         <button
-                            disabled={loading || buttonDisabled}
+                            disabled={loading}
                             onClick={onSignup} 
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer h-[50px] mb-4"    
                         >{loading?  <Ticker />: "Signup"}</button>

@@ -11,8 +11,7 @@ export async function POST(request: NextRequest){
     try {
         await connect();
 
-        const reqBody = await request.json();
-        const {token, password} = reqBody;
+        const {token, password} = await request.json();
 
         //hash password
         const salt = await bcrypt.genSalt(10);
@@ -25,7 +24,13 @@ export async function POST(request: NextRequest){
         
         if(!user){
             console.log("User doesn't exist? ", user);
-            return NextResponse.json({error: "Invalid token"}, {status: 400});
+            return NextResponse.json(
+                { 
+                    message: "Invalid token", 
+                    success:false 
+                }, 
+                { status: 401 }
+            );
         }
 
         user.isVerified = true;
@@ -37,14 +42,22 @@ export async function POST(request: NextRequest){
 
         console.log("savedUser: ", savedUser);
 
-        return NextResponse.json({
-            message:"Password successfully reset.",
-            sucess:true
-        })
+        return NextResponse.json(
+            {
+                message:"Password successfully reset.",
+                success:true
+            },
+            { status:201 }
+        )
         
     } catch (error:any) {
         console.log("resetpassword - API: ", error);
-        NextResponse.json("error: ", error.message);
+        NextResponse.json(
+            { 
+                message:  error.message, 
+                success:false },
+            { status:500 }
+        );
     }
 }
 
