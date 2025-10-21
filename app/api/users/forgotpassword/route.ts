@@ -16,7 +16,10 @@ export async function POST(request: NextRequest){
         if(!user){
             console.log(`forgot password - API: ${email} doesn't exists`, )
             return NextResponse.json(
-                { message: "You should have received an email in your inbox for password recovery." }, 
+                { 
+                    message: "You should have received an email in your inbox for password recovery.", 
+                    success: false
+                }, 
                 { status: 200}
             );
         }
@@ -46,7 +49,7 @@ export async function POST(request: NextRequest){
         console.log("forgotpassword - API: ", error);
         return NextResponse.json(
             {
-                "message": "There was an issue processing your request. Please try again later.",
+                message: "There was an issue processing your request. Please try again later.",
                 success: false
             },
             { status: 500 }

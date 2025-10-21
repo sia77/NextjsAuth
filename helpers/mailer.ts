@@ -37,6 +37,6 @@ export const sendEmail = async({email,emailType, userId}:SendEmailArgs) =>{
 
     } catch (error:any) {
         console.error("Mailer error:", error.message, error.stack);
-        throw new Error("Failed to send email");
+        throw new Error("Failed to send verification email. Please try later again");
     }
 }

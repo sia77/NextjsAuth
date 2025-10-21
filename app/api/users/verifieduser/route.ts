@@ -13,30 +13,10 @@ export async function POST(request:NextRequest){
         if(!user){
             return NextResponse.json(
                 { 
-                    message: "User doesn't exist", 
+                    message: "Invalid username/password", 
                     success:false 
                 }, 
                 { status:401 }
-            );
-        }
-
-        if(!user.isVerified){
-            return NextResponse.json(
-                {
-                    message: "Email address is not verified", 
-                    success:false
-                }, 
-                { status:401 }
-            );
-        }
-
-        if (user.verifyTokenExpiry && user.verifyTokenExpiry < Date.now()) {
-            return NextResponse.json(
-                { 
-                    message: "Verification token expired", 
-                    success:false 
-                }, 
-                { status: 401 }
             );
         }
 
@@ -44,10 +24,30 @@ export async function POST(request:NextRequest){
         if (!isPasswordValid) {
             return NextResponse.json(
                 { 
-                    message: "Invalid password", 
+                    message: "Invalid username/password", 
                     success:false 
                 }, 
-                { status: 400 }
+                { status: 401 }
+            );
+        }
+
+        if(!user.isVerified){
+            return NextResponse.json(
+                {
+                    message: "Access forbidden. Please verify your email address to log in", 
+                    success:false
+                }, 
+                { status: 403 }
+            );
+        }
+
+        if (user.verifyTokenExpiry && user.verifyTokenExpiry < Date.now()) {
+            return NextResponse.json(
+                { 
+                    message: "Access forbidden. Verification token expired", 
+                    success:false 
+                }, 
+                { status: 403 }
             );
         }
 
@@ -58,7 +58,6 @@ export async function POST(request:NextRequest){
             }, 
             { status:200 }
         );
-
         
     } catch (error:any) {
         console.log("Verified user - API: ", error );

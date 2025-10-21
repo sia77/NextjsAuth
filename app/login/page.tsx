@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import Ticker from "../components/tiker";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginPage(){
     const searchParams = useSearchParams();
@@ -12,12 +13,28 @@ export default function LoginPage(){
     const [user, setUser] = useState({ email: "", password:""});      
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [responseMsg, setResponseMsg] = useState(false);
+    const [responseMsg, setResponseMsg] = useState("");
     const [source, setSource] = useState(searchParams.get('from') === "signup");
 
     
+    const validateForm = () =>{
+
+        if( user.email.length === 0 || user.password.length === 0 ){
+            setResponseMsg("All fields are required");
+            setSuccess(false);
+            return false;
+        }
+
+        if (user.email && !emailRegex.test(user.email)) {
+            setResponseMsg('Please enter a valid email address.');
+            return false;
+        }
+
+        return true;
+    }
 
     const IsUserVerified = async() => {
+        if(!validateForm()) return;
         setSource(false);
 
         try {
@@ -62,7 +79,7 @@ export default function LoginPage(){
                 <div className="" >
                     <h1 className="font-bold text-center mb-3">Login</h1>
                     {
-                        responseMsg && (<div className={`bg-red-100 border px-4 py-3 rounded mb-4 text-sm ${ success ? "border-green-400 text-green-700" :"border-red-400 text-red-700" }`} role="alert" >{ responseMsg }</div>)                    
+                        responseMsg && (<div className={`border px-4 py-3 rounded mb-4 text-sm ${ success ? "bg-green-100 border-green-400 text-green-700" :"bg-red-100 border-red-400 text-red-700" }`} role="alert" >{ responseMsg }</div>)                    
                     }
                     {
                         source && (<div className="bg-green-100 border px-4 py-3 rounded mb-4 text-sm border-green-400 text-green-700" role="alert" >Please check your inbox for an email verification link.</div>)                    

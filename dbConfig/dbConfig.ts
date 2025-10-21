@@ -4,7 +4,7 @@ export async function connect() {
   try {
     // Prevent creating multiple connections in dev (Next.js hot reload)
     if (mongoose.connection.readyState >= 1) {
-        console.log("✅ Already connected to MongoDB");
+        console.log("Already connected to MongoDB");
         return;
     }
 
@@ -16,7 +16,7 @@ export async function connect() {
     const connection = mongoose.connection;
 
     connection.on("connected", () => {
-        console.log("✅ MongoDB connected successfully");
+        console.log("MongoDB connected successfully");
     });
 
     connection.on("error", (err) => {

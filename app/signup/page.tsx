@@ -24,7 +24,6 @@ export default function SignupPage(){
     const validateForm = () => {
 
         if( !user.email?.length || !user.password?.length || !user.username?.length ){
-            console.log("hello....");
             setResponseMsg("All fields are required");
             return false;
         }
@@ -54,7 +53,7 @@ export default function SignupPage(){
             setSuccess(res.data.success);
             setResponseMsg(res.data.message);
             console.log("signup success", res.data);
-            router.push("/login?from=signup&sucess=verify-email");
+            router.push("/login?from=signup&success=verify-email");
         } catch (error:any) {
             setSuccess(error.response?.data?.success);
             setResponseMsg(error.response?.data?.message);
@@ -71,7 +70,7 @@ export default function SignupPage(){
                     <h1 className="font-bold text-center mb-3">Signup</h1>
 
                     {
-                        responseMsg && (<div className={`bg-red-100 border px-4 py-3 rounded mb-4 text-sm ${ success ? "border-green-400 text-green-700" :"border-red-400 text-red-700" }`} role="alert" >{ responseMsg }</div>)                    
+                        responseMsg && (<div className={`border px-4 py-3 rounded mb-4 text-sm ${ success ? "bg-green-100 border-green-400 text-green-700" :"bg-red-100 border-red-400 text-red-700" }`} role="alert" >{ responseMsg }</div>)                    
                     }
 
                     <div className="flex flex-col mb-3">

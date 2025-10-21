@@ -6,8 +6,7 @@ export async function POST(request: NextRequest){
     
     try {
         await connect();
-        const reqBody = await request.json();
-        const { token } = reqBody;        
+        const { token } = await request.json();
 
         const user = await User.findOne({
             verifyToken: token            
@@ -16,9 +15,9 @@ export async function POST(request: NextRequest){
         if(!user){
             return NextResponse.json(
                 {
-                    message: "Invalid token.",
+                    message: "Invalid token. Check the email we sent out for a valid link + token",
                     success: false,
-                    canResend: true,
+                    canResend: false,
                 }, 
                 { status: 400 }
             );
@@ -43,7 +42,7 @@ export async function POST(request: NextRequest){
 
         return NextResponse.json({
             message:"Email verified successfully",
-            sucess:true
+            success:true
         })
 
     } catch (error:any) {
