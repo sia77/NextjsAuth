@@ -1,22 +1,24 @@
 "use client"
 
 import axios from "axios";
-import toast from "react-hot-toast";
+
 import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 
 export default function LogoutButton(){
     const router = useRouter();
+    const { setAuthenticated } = useAuth();
 
     const logout = async() => {
 
         try {
-            const response = await axios.get('/api/users/logout');
-            toast.success("Success");
+            const response = await axios.get('/api/users/logout');            
             router.push('/login');
             
         } catch (error:any) {
             console.log("Logout:", error);
-            toast.error(error.message)
+        }finally{
+            setAuthenticated(false);
         }
     }
 

@@ -22,8 +22,7 @@ export default async function ProfilePage(){
         });
 
         if( !res.ok) throw new Error("Failed to fetch user details");
-        const user = await res.json();       
-        
+        const user = await res.json();               
         
         return (
             <div className="flex justify-around items-center h-full">

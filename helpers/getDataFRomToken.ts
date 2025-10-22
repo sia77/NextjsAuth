@@ -1,18 +1,19 @@
-import { cookies } from 'next/headers'; // Must import this!
-import * as jwt from 'jsonwebtoken'; // Assuming you import jwt
+import * as jwt from 'jsonwebtoken'; 
+import { NextRequest } from 'next/server';
 
+export const getDataFromToken = (request:NextRequest) => { 
 
-export const getDataFromToken = async() => { 
+    const token = request.cookies.get("token")?.value || ""; 
+
+    if (!token) {
+        throw new Error("Authentication token is missing."); 
+    }
+
     try {
-        // Read cookies directly from the request context
-        const token = (await cookies()).get("token")?.value;        
-
-        if (!token) return null;
-        
-        const decodedToken:any = jwt.verify(token, process.env.TOKEN_SECRET!);
+        const decodedToken:any = jwt.verify(token, process.env.TOKEN_SECRET!);        
         return decodedToken.id;
     } catch (error:any) {
         console.log("getDataFromToken: ", error);
-        return null; // Return null on failure
+        throw new Error("Authentication token is invalid."); 
     }
 }

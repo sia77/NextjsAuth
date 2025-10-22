@@ -3,6 +3,7 @@ import "./globals.css";
 import Navigation from "./components/navigation";
 import { montserratAlternates, albertSans } from '@/lib/fonts';
 import Footer from "./components/footer";
+import { AuthProvider } from "./context/AuthContext";
 
 
 export const metadata: Metadata = {
@@ -18,9 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-[80%]">
       <body className={`${montserratAlternates.className} ${albertSans.className} h-full`} >
-        <Navigation />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <Navigation />
+          {children}
+          <Footer />
+        </AuthProvider>
+
       </body>
     </html>
   );

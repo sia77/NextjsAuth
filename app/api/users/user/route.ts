@@ -3,11 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connect } from "@/dbConfig/dbConfig";
 import User from '@/models/userModel'; 
 import { getDataFromToken } from "@/helpers/getDataFRomToken";
+import axios from 'axios';
 
 export async function GET(request:NextRequest){
     try {
         await connect(); 
-        const userId = await getDataFromToken();
+        const userId = getDataFromToken(request);
 
         if (!userId) {
              return NextResponse.json(

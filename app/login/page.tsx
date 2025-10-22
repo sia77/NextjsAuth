@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import Ticker from "../components/tiker";
+import { useAuth } from "../context/AuthContext";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginPage(){
+     const { setAuthenticated } = useAuth();
     const searchParams = useSearchParams();
     const router = useRouter();
     const [user, setUser] = useState({ email: "", password:""});      
@@ -61,7 +63,9 @@ export default function LoginPage(){
         try {
             setLoading(true);
             const response = await axios.post('api/users/login', user);
-            console.log("Login response: ", response.data);
+            setResponseMsg(response.data.message);
+            setAuthenticated(true);
+            setSuccess(true);
             router.push('/profile');            
             
         } catch (error:any) {
