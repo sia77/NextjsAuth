@@ -1,9 +1,5 @@
 import Link from "next/link";
 import { headers } from 'next/headers';
-import { NextResponse } from "next/server";
-import { json } from "stream/consumers";
-
-
 
 export default async function ProfilePage(){
 

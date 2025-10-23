@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { isAxiosError } from "axios";
 import Ticker from "../components/tiker";
@@ -56,8 +56,8 @@ export default function SignupPage(){
             router.push("/login?from=signup&success=verify-email");
         } catch (error:unknown) {
             if( isAxiosError(error) ){
-                const msg = error.response?.data?.message && "An unexpected error occured";
-                const isSuccess = error.response?.data?.success && false;
+                const msg = error.response?.data?.message ?? "An unexpected error occured";
+                const isSuccess = error.response?.data?.success ?? false;
                 setSuccess(isSuccess);
                 setResponseMsg( msg);
                 console.log(msg);

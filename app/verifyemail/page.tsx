@@ -2,7 +2,7 @@
 
 import axios, { isAxiosError } from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Ticker from "../components/tiker";
 
 export default function VerifyEmailPage(){
@@ -14,35 +14,33 @@ export default function VerifyEmailPage(){
     const [success, setSuccess] = useState(false);
     const [responseMsg, setResponseMsg] = useState("");
 
-    const verifyUserEmail = async () => {
+    const verifyUserEmail = useCallback(async () => {
         try {
-            const res = await axios.post('/api/users/verifyemail', {token});
+            const res = await axios.post('/api/users/verifyemail', { token });
             setResponseMsg(res?.data?.message || "Something went wrong.");
             setCanResend(res?.data?.canResend || false);
             setSuccess(res?.data?.success);
-        } catch (error:unknown) {
-           
-            if( isAxiosError(error) ){
-                const msg = error.response?.data?.message && "An unexpected error occured";
-                const isSuccess = error.response?.data?.success && false;
+        } catch (error: unknown) {
+            if (isAxiosError(error)) {
+                const msg = error.response?.data?.message ?? "An unexpected error occurred";
+                const isSuccess = error.response?.data?.success ?? false;
                 setSuccess(isSuccess);
-                setResponseMsg( msg);
-                setCanResend(error?.response?.data?.canResend || false);
+                setResponseMsg(msg);
+                setCanResend(error.response?.data?.canResend || false);
                 console.log(msg);
-
-            }else if( error instanceof Error){
+            } else if (error instanceof Error) {
                 setSuccess(false);
-                setResponseMsg( error.message );
+                setResponseMsg(error.message);
                 setCanResend(false);
-                console.log( error.message );
-            }else{
+                console.log(error.message);
+            } else {
                 console.error("Unexpected error", error);
                 setResponseMsg("Something went wrong");
                 setSuccess(false);
                 setCanResend(false);
-            }           
+            }
         }
-    }
+    }, [token]);
 
     const resendVerification = async () => {
         try {
@@ -53,8 +51,8 @@ export default function VerifyEmailPage(){
         } catch (error:unknown) {
 
             if( isAxiosError(error) ){
-                const msg = error.response?.data?.message && "An unexpected error occured";
-                const isSuccess = error.response?.data?.success && false;
+                const msg = error.response?.data?.message ?? "An unexpected error occured";
+                const isSuccess = error.response?.data?.success ?? false;
                 setSuccess(isSuccess);
                 setResponseMsg( msg);
                 console.log(msg);
@@ -88,7 +86,7 @@ export default function VerifyEmailPage(){
         if(token?.length > 0 ){
             verifyUserEmail();
         }
-    }, [token]);
+    }, [token, verifyUserEmail]);
 
  
     return(
