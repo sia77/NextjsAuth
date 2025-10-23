@@ -68,6 +68,7 @@ export async function POST(request:NextRequest){
             { status: 201 }
         );
         }else{
+            console.log("There was an issue sending verification email. Please try again");
             return NextResponse.json(
                 {
                     message: "There was an issue sending verification email. Please try again",

@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFRomToken";
 
 
-export async function GET(request: NextRequest){
-    
+export async function GET(request: NextRequest){    
 
     try {
 

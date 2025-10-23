@@ -1,19 +1,19 @@
-import * as jwt from 'jsonwebtoken'; 
+import jwt from "jsonwebtoken"; 
 import { NextRequest } from 'next/server';
 
-export const getDataFromToken = (request:NextRequest) => { 
+export const getDataFromToken = (request: NextRequest) => {
+    
+    const token = request.cookies.get("token")?.value;
+    if (!token) throw new Error("Authentication token is missing.");
 
-    const token = request.cookies.get("token")?.value || ""; 
-
-    if (!token) {
-        throw new Error("Authentication token is missing."); 
-    }
+    const secret = process.env.TOKEN_SECRET;
+    if (!secret) throw new Error("Server misconfiguration: TOKEN_SECRET missing");
 
     try {
-        const decodedToken:any = jwt.verify(token, process.env.TOKEN_SECRET!);        
-        return decodedToken.id;
-    } catch (error:any) {
-        console.log("getDataFromToken: ", error);
-        throw new Error("Authentication token is invalid."); 
+        const decoded = jwt.verify(token, secret) as { id: string };
+        return decoded.id;
+    } catch (error) {
+        console.error("getDataFromToken:", error);
+        throw new Error("Authentication token is invalid or expired.");
     }
-}
+};
