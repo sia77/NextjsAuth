@@ -81,7 +81,7 @@ export async function POST(request:NextRequest){
         console.log("signup api: ", error);
         return NextResponse.json(
             { 
-                message: error || "Internal server error",
+                message: "Internal server error",
                 success:false
             },
             { status: 500 }
