@@ -38,14 +38,14 @@ export async function POST(request: NextRequest){
         user.verifyToken = undefined;
         user.verifyTokenExpiry = undefined;
 
-        const userSaved = await user.save();
+        await user.save();
 
         return NextResponse.json({
             message:"Email verified successfully",
             success:true
         })
 
-    } catch (error:any) {
+    } catch (error:unknown) {
         console.log("email Verify - api - POST", error);
         return NextResponse.json(
             {

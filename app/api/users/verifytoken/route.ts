@@ -17,9 +17,9 @@ export async function GET(request: NextRequest){
             }, 
             { status: 200 }
         );
-    } catch (error:any) {
-        console.error("Token verification failed:", error.message);
-        
+    } catch (error:unknown) {
+        console.error("Token verification failed:", error);
+
         return NextResponse.json(
             { 
                 message: "Invalid or expired token", 

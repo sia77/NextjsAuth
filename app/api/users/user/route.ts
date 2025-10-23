@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connect } from "@/dbConfig/dbConfig";
 import User from '@/models/userModel'; 
 import { getDataFromToken } from "@/helpers/getDataFRomToken";
-import axios from 'axios';
 
 export async function GET(request:NextRequest){
     try {
@@ -29,7 +28,7 @@ export async function GET(request:NextRequest){
             },
             { status: 200 }
         );
-    } catch (error:any) {
+    } catch (error:unknown) {
         console.log("user-route-GET: ", error);
         return NextResponse.json(
             {

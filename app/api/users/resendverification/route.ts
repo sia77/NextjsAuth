@@ -52,11 +52,11 @@ export async function POST( request:NextRequest ){
             );
         }
         
-    } catch (error:any) {
+    } catch (error:unknown) {
         console.log("resendVerification - API: ", error);
         return NextResponse.json(
-            { error: error.message || "Internal Server Error"}, 
-            { status: error.status || 500}
+            { error: "Internal Server Error"}, 
+            { status: 500}
         );
     }
 }

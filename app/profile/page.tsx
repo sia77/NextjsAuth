@@ -37,7 +37,7 @@ export default async function ProfilePage(){
             </div>
         )
 
-    } catch (error:any) {
+    } catch (error:unknown) {
         console.log("getUserDetails: ", error);
 
         return (

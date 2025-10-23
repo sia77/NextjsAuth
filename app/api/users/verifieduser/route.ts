@@ -59,7 +59,7 @@ export async function POST(request:NextRequest){
             { status:200 }
         );
         
-    } catch (error:any) {
+    } catch (error:unknown) {
         console.log("Verified user - API: ", error );
         return NextResponse.json(
             { 

@@ -1,6 +1,6 @@
 "use client"
 
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import Ticker from "../components/tiker";
 import Link from "next/link";
@@ -40,10 +40,25 @@ export default function ResetPasswordPage(){
             setMsg(res.data?.message);
 
             
-        } catch (error:any) {
-            setSuccess(error?.response?.data?.success);
-            setMsg(error?.response?.data?.message);
-            throw new Error(error.message)
+        } catch (error:unknown) {
+
+            if(isAxiosError(error)){
+                const msg = error.response?.data?.message ?? "An error occurred";
+                const isSuccess = error.response?.data?.success ?? false;
+                console.error(msg);
+                setSuccess(isSuccess);
+                setMsg(msg);
+
+            }else if(error instanceof Error){
+                console.error(error.message);
+                setSuccess(false);
+                setMsg(error.message); 
+
+            }else{
+                console.error("Unexpected error", error);
+                setMsg("Something went wrong");
+                setSuccess(false);
+            }            
         }finally{
             setLoading(false);
         }

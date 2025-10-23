@@ -1,6 +1,6 @@
 "use client"
 
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Ticker from "../components/tiker";
@@ -20,10 +20,27 @@ export default function VerifyEmailPage(){
             setResponseMsg(res?.data?.message || "Something went wrong.");
             setCanResend(res?.data?.canResend || false);
             setSuccess(res?.data?.success);
-        } catch (error:any) {
-            setResponseMsg(error?.response?.data?.message || "Something went wrong.");
-            setCanResend(error?.response?.data?.canResend || false);
-            setSuccess(error?.response?.data?.success);            
+        } catch (error:unknown) {
+           
+            if( isAxiosError(error) ){
+                const msg = error.response?.data?.message && "An unexpected error occured";
+                const isSuccess = error.response?.data?.success && false;
+                setSuccess(isSuccess);
+                setResponseMsg( msg);
+                setCanResend(error?.response?.data?.canResend || false);
+                console.log(msg);
+
+            }else if( error instanceof Error){
+                setSuccess(false);
+                setResponseMsg( error.message );
+                setCanResend(false);
+                console.log( error.message );
+            }else{
+                console.error("Unexpected error", error);
+                setResponseMsg("Something went wrong");
+                setSuccess(false);
+                setCanResend(false);
+            }           
         }
     }
 
@@ -33,8 +50,24 @@ export default function VerifyEmailPage(){
             const response = await axios.post("/api/users/resendverification", {email});
             setSuccess(response.data.success);
             setResponseMsg(response.data.message)
-        } catch (error:any) {
-            setResponseMsg(error?.response?.data.message);
+        } catch (error:unknown) {
+
+            if( isAxiosError(error) ){
+                const msg = error.response?.data?.message && "An unexpected error occured";
+                const isSuccess = error.response?.data?.success && false;
+                setSuccess(isSuccess);
+                setResponseMsg( msg);
+                console.log(msg);
+
+            }else if( error instanceof Error){
+                setSuccess(false);
+                setResponseMsg( error.message );
+                console.log( error.message );
+            }else{
+                console.error("Unexpected error", error);
+                setResponseMsg("Something went wrong");
+                setSuccess(false);
+            }
         }finally{
             setLoading(false);
         }        

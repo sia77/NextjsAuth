@@ -50,11 +50,11 @@ export async function POST(request: NextRequest){
             { status:201 }
         )
         
-    } catch (error:any) {
+    } catch (error:unknown) {
         console.log("resetpassword - API: ", error);
         NextResponse.json(
             { 
-                message:  error.message, 
+                message:  "Internal server error", 
                 success:false },
             { status:500 }
         );

@@ -77,10 +77,10 @@ export async function POST(request:NextRequest){
             );
         }
         
-    } catch (error:any) {
+    } catch (error:unknown) {
         return NextResponse.json(
             { 
-                message: error.message,
+                message: "Internal server error",
                 success:false
             },
             { status: 500 }

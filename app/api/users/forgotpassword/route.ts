@@ -45,7 +45,7 @@ export async function POST(request: NextRequest){
             );
         }
         
-    } catch (error:any) {
+    } catch (error:unknown) {
         console.log("forgotpassword - API: ", error);
         return NextResponse.json(
             {

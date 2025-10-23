@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import Ticker from "../components/tiker";
 import { useAuth } from "../context/AuthContext";
 
@@ -68,10 +68,25 @@ export default function LoginPage(){
             setSuccess(true);
             router.push('/profile');            
             
-        } catch (error:any) {
-            console.log("login1: ", error.message);
-            setSuccess(error.response?.data?.success);
-            setResponseMsg(error.response?.data?.message);
+        } catch (error:unknown) {
+
+            if (isAxiosError(error)) {
+                const message = error.response?.data?.message ?? "An error occurred";
+                const isSuccess = error.response?.data?.success ?? false;
+                console.error(message);
+                setSuccess(isSuccess);
+                setResponseMsg(message);
+            } else if (error instanceof Error) {
+                // Non-Axios errors
+                console.error(error.message);
+                setResponseMsg(error.message);
+                setSuccess(false);
+            } else {
+                // Unknown error type
+                console.error("Unexpected error", error);
+                setResponseMsg("Something went wrong");
+                setSuccess(false);
+            }
         }
         finally{
             setLoading(false);

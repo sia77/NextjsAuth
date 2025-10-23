@@ -61,11 +61,13 @@ export async function POST(request:NextRequest){
 
         return response;
         
-    } catch (error:any) {
+    } catch (error:unknown) {
+
         console.log("error:", error);
+       
         return NextResponse.json(
             { 
-                message: error.message, 
+                message:"Internal server error", 
                 success:false 
             },
             { status: 500 }

@@ -12,10 +12,10 @@ export default function LogoutButton(){
     const logout = async() => {
 
         try {
-            const response = await axios.get('/api/users/logout');            
+            await axios.get('/api/users/logout');            
             router.push('/login');
             
-        } catch (error:any) {
+        } catch (error:unknown) {
             console.log("Logout:", error);
         }finally{
             setAuthenticated(false);

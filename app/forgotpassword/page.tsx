@@ -1,8 +1,9 @@
 "use client"
 
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { useState } from "react";
 import Ticker from "../components/tiker";
+
 
 export default function ForgotPasswordPage(){
 
@@ -21,10 +22,24 @@ export default function ForgotPasswordPage(){
             setResMessage(response.data.message);
             setSuccess(true);
             
-        } catch (error:any) {
-            console.error( "forgotPassword:", error );
-            setResMessage( error.response?.data?.message || error.message || "An error occurred" );
-            setSuccess( false );
+        } catch (error:unknown) {
+            if (isAxiosError(error)) {
+                const message = error.response?.data?.message ?? "An error occurred";
+                const isSuccess = error.response?.data?.success ?? false;
+                console.error(message);
+                setSuccess(isSuccess);
+                setResMessage(message);
+            } else if (error instanceof Error) {
+                // Non-Axios errors
+                console.error(error.message);
+                setResMessage(error.message);
+                setSuccess(false);
+            } else {
+                // Unknown error type
+                console.error("Unexpected error", error);
+                setResMessage("Something went wrong");
+                setSuccess(false);
+            }
         }finally{
             setLoading(false);
         }

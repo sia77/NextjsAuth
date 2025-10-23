@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import Ticker from "../components/tiker";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -54,9 +54,24 @@ export default function SignupPage(){
             setResponseMsg(res.data.message);
             console.log("signup success", res.data);
             router.push("/login?from=signup&success=verify-email");
-        } catch (error:any) {
-            setSuccess(error.response?.data?.success);
-            setResponseMsg(error.response?.data?.message);
+        } catch (error:unknown) {
+            if( isAxiosError(error) ){
+                const msg = error.response?.data?.message && "An unexpected error occured";
+                const isSuccess = error.response?.data?.success && false;
+                setSuccess(isSuccess);
+                setResponseMsg( msg);
+                console.log(msg);
+
+            }else if( error instanceof Error){
+                setSuccess(false);
+                setResponseMsg( error.message );
+                console.log( error.message );
+            }else{
+                console.error("Unexpected error", error);
+                setResponseMsg("Something went wrong");
+                setSuccess(false);
+            }
+
         } finally{
             setLoading(false);
         }
