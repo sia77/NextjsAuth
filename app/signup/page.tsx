@@ -56,8 +56,8 @@ export default function SignupPage(){
             router.push("/login?from=signup&success=verify-email");
         } catch (error:unknown) {
             if( isAxiosError(error) ){
-                const msg = error.response?.data?.message ?? "An unexpected error occured";
-                const isSuccess = error.response?.data?.success ?? false;
+                const msg = error.response?.data?.message || "Hi hi";
+                const isSuccess = error.response?.data?.success || false;
                 setSuccess(isSuccess);
                 setResponseMsg( msg);
                 console.log(msg);
