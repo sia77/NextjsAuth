@@ -18,7 +18,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await axios.get("/api/users/verifytoken");
+        const response = await axios.get("/api/users/verifytoken", { withCredentials: true, });
         setAuthenticated(response.data.success);
       } catch (err) {
         console.log("AuthProvider-err: ", err);
