@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios, { isAxiosError } from "axios";
 import Ticker from "../components/tiker";
@@ -9,7 +9,7 @@ import { useAuth } from "../context/AuthContext";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function LoginPage(){
+const LoginContent = () => {
      const { setAuthenticated } = useAuth();
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -158,4 +158,13 @@ export default function LoginPage(){
             </div>
         </div>
     )
+}
+
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
 }
