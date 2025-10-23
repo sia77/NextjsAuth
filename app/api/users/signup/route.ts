@@ -78,6 +78,7 @@ export async function POST(request:NextRequest){
         }
         
     } catch (error:unknown) {
+        console.log("signup api: ", error);
         return NextResponse.json(
             { 
                 message: "Internal server error",

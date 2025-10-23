@@ -1,4 +1,5 @@
 "use client"
+
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -46,11 +47,26 @@ export default function LoginPage(){
             setResponseMsg(response.data.message);
             return (response.data.success);            
             
-        } catch (error:any) {
-            console.log("login12: ", error);
-            setSuccess(error.response?.data?.success);
-            setResponseMsg(error.response?.data?.message);            
-            return false;
+        } catch (error:unknown) {
+
+            if(isAxiosError(error)){
+                const msg = error.response?.data?.message ?? "An error occurred";
+                const isSuccess = error.response?.data?.success ?? false;
+                console.error(msg);
+                setSuccess(isSuccess);
+                setResponseMsg(msg);
+
+            }else if(error instanceof Error){
+                console.error(error.message);
+                setSuccess(false);
+                setResponseMsg(error.message); 
+
+            }else{
+                console.error("Unexpected error", error);
+                setResponseMsg("Something went wrong");
+                setSuccess(false);
+            }
+
         }finally{
             setLoading(false);
         }
