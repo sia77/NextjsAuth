@@ -8,10 +8,7 @@ export async function POST(request:NextRequest){
     try {
 
         await connect();
-        const reqBody = await request.json();
-        const { email, password} = reqBody;
-
-        console.log(reqBody);
+        const { email, password} = await request.json();
 
         //check if the user already exists
         const user = await User.findOne({email})
@@ -57,13 +54,18 @@ export async function POST(request:NextRequest){
             { status: 200 }
         );
 
-        response.cookies.set("token", token, {httpOnly:true, path: '/', secure: false, sameSite: "lax"})
+        response.cookies.set("token", token, {
+            httpOnly: true,
+            path: "/",
+            secure: process.env.NODE_ENV === "production", 
+            sameSite: "lax",
+        });
 
         return response;
         
     } catch (error:unknown) {
 
-        console.log("error:", error);
+        console.error("error:", error);
        
         return NextResponse.json(
             { 
