@@ -3,8 +3,7 @@ import { NextRequest } from 'next/server';
 
 export const getDataFromToken = (request: NextRequest) => {
 
-    console.log("Request1: ", request);
-    console.error("Request2: ", request);
+    console.log("Request3: ", request);
 
     const token = request.cookies.get("token")?.value;
     if (!token) throw new Error("Authentication token is missing.");
