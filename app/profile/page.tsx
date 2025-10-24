@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { headers } from 'next/headers';
+import { headers, cookies } from 'next/headers';
 
 export default async function ProfilePage(){
 
-    const headersList = headers();
-    const cookieHeader = (await headersList).get('cookie');
+    const cookieStore = cookies();
+    const token = (await cookieStore).get("token")?.value;
+    //const headersList = headers();
+    //const cookieHeader = (await headersList).get('cookie');
     const BASE_URL = process.env.DOMAIN;
     const fullPath = `${BASE_URL}/api/users/user`; 
 
@@ -12,7 +14,7 @@ export default async function ProfilePage(){
                
         const res = await fetch(fullPath, { 
             headers: {                
-                'Cookie': cookieHeader || '',
+                'Cookie': `token=${token}`,
             },
             cache: "no-store",
         });
