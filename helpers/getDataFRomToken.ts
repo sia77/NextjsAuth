@@ -5,6 +5,8 @@ export const getDataFromToken = (request: NextRequest) => {
 
     console.log("Request3: ", request);
 
+    console.log("Request4: ", request.headers.get("cookie"));
+
     const token = request.cookies.get("token")?.value;
     if (!token) throw new Error("Authentication token is missing.");
 
