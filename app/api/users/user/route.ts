@@ -5,6 +5,8 @@ import User from '@/models/userModel';
 import { getDataFromToken } from "@/helpers/getDataFRomToken";
 
 export async function GET(request:NextRequest){
+
+    console.log("Request5: ", request);
     try {
         await connect(); 
         const userId = getDataFromToken(request);
