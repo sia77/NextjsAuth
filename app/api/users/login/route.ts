@@ -54,8 +54,6 @@ export async function POST(request:NextRequest){
             { status: 200 }
         );
 
-        console.info("****Vercel: ", process.env.NODE_ENV === "production" );
-
         response.cookies.set("token", token, {
             httpOnly: true,
             path: "/",
