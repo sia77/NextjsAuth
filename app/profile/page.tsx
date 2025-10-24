@@ -4,7 +4,9 @@ import { headers, cookies } from 'next/headers';
 export default async function ProfilePage(){
 
     const cookieStore = cookies();
+
     const token = (await cookieStore).get("token")?.value;
+    console.log("******token: ", token);
     //const headersList = headers();
     //const cookieHeader = (await headersList).get('cookie');
     const BASE_URL = process.env.DOMAIN;
