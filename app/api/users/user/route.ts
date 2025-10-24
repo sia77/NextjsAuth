@@ -9,9 +9,9 @@ export async function GET(request:NextRequest){
     console.log("Request5: ", request);
     try {
         await connect(); 
-        const userId = getDataFromToken(request);
+        const userResp = getDataFromToken(request);
 
-        if (!userId) {
+        if (!userResp.id) {
              return NextResponse.json(
                 { 
                     message: "Unauthorized or token missing/invalid", 
@@ -20,7 +20,7 @@ export async function GET(request:NextRequest){
                 { status: 401 });
         };
 
-        const user = await User.findOne({_id: userId}).select("-password");
+        const user = await User.findOne({_id: userResp.id}).select("-password");
         
         return NextResponse.json(
             {
