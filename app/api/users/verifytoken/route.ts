@@ -6,13 +6,13 @@ export async function GET(request: NextRequest){
 
     try {
 
-        const userId = getDataFromToken(request);
+        const user = getDataFromToken(request);
         
         return NextResponse.json(
             { 
                 message: "Token valid", 
                 success: true, 
-                userId: userId 
+                userId: user 
             }, 
             { status: 200 }
         );

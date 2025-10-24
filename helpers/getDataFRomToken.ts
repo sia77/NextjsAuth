@@ -22,7 +22,7 @@ export const getDataFromToken = (request: NextRequest) => {
     try {
         const decoded = jwt.verify(token, secret) as { id: string };
         console.log("****decoded: ", decoded);
-        return decoded.id;
+        return decoded;
     } catch (error) {
         console.error("getDataFromToken:", error);
         throw new Error("Authentication token is invalid or expired.");
