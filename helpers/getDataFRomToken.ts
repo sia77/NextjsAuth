@@ -7,7 +7,10 @@ export const getDataFromToken = (request: NextRequest) => {
 
     console.log("Request4: ", request.headers.get("cookie"));
 
-    const token = request.cookies.get("token")?.value;
+    //const token = request.cookies.get("token")?.value;
+
+    const token = request.headers.get("cookie")?.split("=")[1];
+
     if (!token) throw new Error("Authentication token is missing.");
 
     const secret = process.env.TOKEN_SECRET;
