@@ -3,7 +3,6 @@ import { NextRequest } from 'next/server';
 
 export const getDataFromToken = (request: NextRequest) => {
 
-    console.log("Request3: ", request);
 
     console.log("Request4: ", request.headers.get("cookie"));
 

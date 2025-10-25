@@ -11,6 +11,9 @@ export async function GET(request:NextRequest){
         await connect(); 
         const userResp = getDataFromToken(request);
 
+        console.log("userResp: ", userResp);
+        console.log("userResp.id: ", userResp.id);
+
         if (!userResp.id) {
              return NextResponse.json(
                 { 
@@ -21,6 +24,8 @@ export async function GET(request:NextRequest){
         };
 
         const user = await User.findOne({_id: userResp.id}).select("-password");
+
+        console.log("UserDB ", user);
         
         return NextResponse.json(
             {

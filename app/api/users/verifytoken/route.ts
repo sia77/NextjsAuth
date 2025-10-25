@@ -7,6 +7,8 @@ export async function GET(request: NextRequest){
     try {
 
         const user = getDataFromToken(request);
+
+        console.log("user, ", user);
         
         return NextResponse.json(
             { 
